@@ -6,17 +6,12 @@ exports.getAllBooks = async (req, res) => {
     try {
         const { search, genre_id, sortBy, page = 1, limit = 10 } = req.query;
 
-        let query = `
-            SELECT 
-                b.id, b.isbn, b.title, b.description, b.year,
-                a.name AS author_name,
-                g.name AS genre_name,
-                (SELECT AVG(rating) FROM userbookinteraction WHERE book_id = b.id) as average_rating
+        // --- Базовий запит для фільтрації ---
+        let baseQuery = `
             FROM book b
             JOIN author a ON b.author_id = a.id
             JOIN genre g ON b.genre_id = g.id
         `;
-
         const queryParams = [];
         let whereClauses = [];
 
@@ -30,25 +25,47 @@ exports.getAllBooks = async (req, res) => {
         }
 
         if (whereClauses.length > 0) {
-            query += ' WHERE ' + whereClauses.join(' AND ');
+            baseQuery += ' WHERE ' + whereClauses.join(' AND ');
         }
+
+        // --- 1. Отримуємо загальну кількість книг (для пагінації) ---
+        const countQuery = `SELECT COUNT(b.id) as totalCount ${baseQuery}`;
+        const [countRows] = await db.query(countQuery, queryParams);
+        const totalCount = countRows[0].totalCount;
+        const totalPages = Math.ceil(totalCount / limit);
+
+        // --- 2. Отримуємо книги для поточної сторінки ---
+        let booksQuery = `
+            SELECT 
+                b.id, b.isbn, b.title, b.description, b.year,
+                a.name AS author_name,
+                g.name AS genre_name,
+                (SELECT AVG(rating) FROM userbookinteraction WHERE book_id = b.id) as average_rating
+            ${baseQuery}
+        `;
 
         // Сортування
         if (sortBy === 'title_asc') {
-            query += ' ORDER BY b.title ASC';
+            booksQuery += ' ORDER BY b.title ASC';
         } else if (sortBy === 'rating_desc') {
-            query += ' ORDER BY average_rating DESC';
+            booksQuery += ' ORDER BY average_rating DESC';
         } else {
-            query += ' ORDER BY b.id DESC'; // За замовчуванням
+            booksQuery += ' ORDER BY b.id DESC';
         }
 
         // Пагінація
         const offset = (page - 1) * limit;
-        query += ' LIMIT ? OFFSET ?';
-        queryParams.push(parseInt(limit), parseInt(offset));
+        booksQuery += ' LIMIT ? OFFSET ?';
+        // Додаємо ліміт та зсув до *копії* масиву параметрів, щоб не заважати запиту на кількість
+        const booksQueryParams = [...queryParams, parseInt(limit), parseInt(offset)];
+        const [books] = await db.query(booksQuery, booksQueryParams);
 
-        const [books] = await db.query(query, queryParams);
-        res.json(books);
+        // --- Надсилаємо відповідь ---
+        res.json({
+            books,
+            totalPages,
+            currentPage: parseInt(page)
+        });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
