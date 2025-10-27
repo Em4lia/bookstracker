@@ -2,6 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 
+import { statusMap } from '../services/statusMapper';
+import {Link} from "react-router-dom";
+
 function MyBooksPage() {
     const [books, setBooks] = useState([]);
 
@@ -40,8 +43,10 @@ function MyBooksPage() {
             ) : (
                 books.map((book) => (
                     <div key={book.id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
-                        <strong>{book.title}</strong> - {book.author_name}
-                        <p>Статус: {book.status}, Рейтинг: {book.rating || 'немає'}</p>
+                        <strong><Link to={`/books/${book.id}`} className="text-decoration-none">
+                            {book.title}
+                        </Link></strong> - {book.author_name}
+                        <p>Статус: {statusMap[book.status] || book.status}, Рейтинг: {book.rating || 'немає'}</p>
                         <button onClick={() => handleRemove(book.id)}>Видалити зі списку</button>
                     </div>
                 ))
