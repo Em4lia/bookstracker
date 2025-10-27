@@ -1,0 +1,18 @@
+# Node.js
+node_modules/
+dist/
+.env
+
+# Python / Django / Flask
+__pycache__/
+*.pyc
+*.sqlite3
+.env
+
+# IDE
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
