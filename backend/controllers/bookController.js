@@ -166,6 +166,23 @@ exports.getUserBooks = async (req, res) => {
     }
 }
 
+exports.getUserBookStatus = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { bookId } = req.params;
+        const query = 'SELECT * FROM userbookinteraction WHERE user_id = ? AND book_id = ?';
+        const [rows] = await db.execute(query, [userId, bookId]);
+
+        if (rows.length > 0) {
+            res.json(rows[0]); // Повертає об'єкт взаємодії (статус, рейтинг і т.д.)
+        } else {
+            res.json(null); // Повертає null, якщо книга не у списку
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
 // Додати/оновити взаємодію користувача з книгою
 exports.manageUserBook = async (req, res) => {
     try {
@@ -192,7 +209,7 @@ exports.manageUserBook = async (req, res) => {
         await db.execute(query, [userId, book_id, status, finalRating, finalComment]);
         res.json({ message: 'Your book list has been updated.' });
     } catch (error) {
-        console.error("Error in manageUserBook:", error); // Додамо лог на сервері для відладки
+        console.error("Error in manageUserBook:", error);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };

@@ -11,7 +11,8 @@ router.get('/:id', bookController.getBookById);
 router.get('/:id/reviews', bookController.getBookReviews);
 
 // --- Захищені маршрути для користувача ---
-router.get('/my/list', verifyToken, bookController.getUserBooks); // Змінив шлях для уникнення конфліктів
+router.get('/my/list', verifyToken, bookController.getUserBooks);
+router.get('/my/status/:bookId', verifyToken, bookController.getUserBookStatus);
 router.post('/my/list', verifyToken, bookController.manageUserBook);
 router.delete('/my/list/:bookId', verifyToken, bookController.deleteUserBookInteraction);
 
