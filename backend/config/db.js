@@ -1,8 +1,7 @@
-// config/db.js
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
-// Створюємо пул з'єднань, що ефективніше для багатьох запитів
+
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -13,11 +12,10 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
-// Перевіряємо з'єднання
 pool.getConnection()
     .then(connection => {
         console.log('✅ MySQL Database connected successfully!');
-        connection.release(); // Повертаємо з'єднання назад у пул
+        connection.release();
     })
     .catch(error => {
         console.error('❌ Error connecting to MySQL database:', error.message);

@@ -1,4 +1,3 @@
-// src/services/authService.js
 import { jwtDecode } from 'jwt-decode';
 
 export const login = (token) => {
@@ -13,7 +12,7 @@ export const getCurrentUser = () => {
     try {
         const token = localStorage.getItem('token');
         if (!token) return null;
-        return jwtDecode(token); // Декодуємо токен, щоб отримати id та role
+        return jwtDecode(token);
     } catch (error) {
         console.error("Error decoding token", error);
         return null;

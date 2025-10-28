@@ -1,11 +1,9 @@
-// routes/authorRoutes.js
 const express = require('express');
 const router = express.Router();
 const authorController = require('../controllers/authorController');
 const verifyToken = require('../middleware/verifyToken');
 const isAdmin = require('../middleware/isAdmin');
 
-// Публічний маршрут, щоб фронтенд міг отримати список для випадаючого меню
 router.get('/', authorController.getAllAuthors);
 
 // Адмінські маршрути

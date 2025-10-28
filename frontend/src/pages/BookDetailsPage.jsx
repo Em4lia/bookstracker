@@ -1,4 +1,3 @@
-// client/src/pages/BookDetailsPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
@@ -12,21 +11,17 @@ function BookDetailsPage() {
     const [book, setBook] = useState(null);
     const [reviews, setReviews] = useState([]);
 
-    // Новий стан для відстеження взаємодії користувача
     const [userInteraction, setUserInteraction] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // Стан для форми відгуку
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState('');
 
     const loggedIn = isLoggedIn();
     const admin = isAdmin();
 
-    // Функція для завантаження ВСІХ даних сторінки
     const fetchData = async () => {
         try {
-            // 1. Отримуємо книгу і відгуки
             const [bookRes, reviewsRes] = await Promise.all([
                 api.get(`/books/${id}`),
                 api.get(`/books/${id}/reviews`)
@@ -34,12 +29,10 @@ function BookDetailsPage() {
             setBook(bookRes.data);
             setReviews(reviewsRes.data);
 
-            // 2. Якщо користувач увійшов, отримуємо його статус для цієї книги
             if (loggedIn) {
                 const interactionRes = await api.get(`/books/my/status/${id}`);
-                setUserInteraction(interactionRes.data); // Це буде null або об'єкт взаємодії
+                setUserInteraction(interactionRes.data);
 
-                // 3. Якщо взаємодія є, заповнюємо форму наявними даними
                 if (interactionRes.data) {
                     setRating(interactionRes.data.rating || 0);
                     setComment(interactionRes.data.comment || '');
@@ -107,7 +100,6 @@ function BookDetailsPage() {
         }
     };
 
-    // 4. Видалення відгуку (для адміна)
     const handleReviewDelete = async (userId) => {
         if (window.confirm("Ви впевнені?")) {
             try {
@@ -127,14 +119,12 @@ function BookDetailsPage() {
     return (
         <Container>
             <Row>
-                {/* --- Інформація про книгу (ліва колонка) --- */}
                 <Col md={8}>
                     <h2>{book.title}</h2>
                     <p className="text-muted">Автор: {book.author_name} | Жанр: {book.genre_name} | Рік: {book.year}</p>
                     <p>{book.description}</p>
                     <hr />
 
-                    {/* --- Секція відгуків --- */}
                     <h3>Відгуки</h3>
                     {reviews.length > 0 ? (
                         <ListGroup variant="flush">
@@ -163,7 +153,6 @@ function BookDetailsPage() {
                     )}
                 </Col>
 
-                {/* --- Керування (права колонка) --- */}
                 <Col md={4}>
                     <Card>
                         <Card.Body>
@@ -175,7 +164,6 @@ function BookDetailsPage() {
                                 </Alert>
                             )}
 
-                            {/* **ВИРІШЕННЯ БАГУ 2: Кнопка "Додати" зникає** */}
                             {loggedIn && !userInteraction && (
                                 <Button variant="primary" className="w-100" onClick={handleAddToList}>
                                     Додати до мого списку
@@ -199,7 +187,6 @@ function BookDetailsPage() {
                                     </Form.Group>
                                     <hr />
 
-                                    {/* Форма відгуку з'являється ТІЛЬКИ якщо статус "Прочитано" */}
                                     {userInteraction.status === 'read' ? (
                                         <Form onSubmit={handleReviewSubmit}>
                                             <Form.Group className="mb-3">

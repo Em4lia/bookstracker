@@ -1,12 +1,10 @@
-// controllers/bookController.js
 const db = require('../config/db');
 
-// Отримати всі книги (з пошуком, фільтрацією, сортуванням, пагінацією)
+
 exports.getAllBooks = async (req, res) => {
     try {
         const { search, genre_id, sortBy, page = 1, limit = 10 } = req.query;
 
-        // --- Базовий запит для фільтрації ---
         let baseQuery = `
             FROM book b
             JOIN author a ON b.author_id = a.id
@@ -28,13 +26,11 @@ exports.getAllBooks = async (req, res) => {
             baseQuery += ' WHERE ' + whereClauses.join(' AND ');
         }
 
-        // --- 1. Отримуємо загальну кількість книг (для пагінації) ---
         const countQuery = `SELECT COUNT(b.id) as totalCount ${baseQuery}`;
         const [countRows] = await db.query(countQuery, queryParams);
         const totalCount = countRows[0].totalCount;
         const totalPages = Math.ceil(totalCount / limit);
 
-        // --- 2. Отримуємо книги для поточної сторінки ---
         let booksQuery = `
             SELECT 
                 b.id, b.isbn, b.title, b.description, b.year,
@@ -56,11 +52,9 @@ exports.getAllBooks = async (req, res) => {
         // Пагінація
         const offset = (page - 1) * limit;
         booksQuery += ' LIMIT ? OFFSET ?';
-        // Додаємо ліміт та зсув до *копії* масиву параметрів, щоб не заважати запиту на кількість
         const booksQueryParams = [...queryParams, parseInt(limit), parseInt(offset)];
         const [books] = await db.query(booksQuery, booksQueryParams);
 
-        // --- Надсилаємо відповідь ---
         res.json({
             books,
             totalPages,
@@ -71,7 +65,7 @@ exports.getAllBooks = async (req, res) => {
     }
 };
 
-// Отримати одну книгу за ID
+
 exports.getBookById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -92,7 +86,6 @@ exports.getBookById = async (req, res) => {
     }
 };
 
-// [ADMIN] Оновити книгу
 exports.updateBook = async (req, res) => {
     try {
         const { id } = req.params;
@@ -108,11 +101,9 @@ exports.updateBook = async (req, res) => {
     }
 };
 
-// [ADMIN] Видалити книгу
 exports.deleteBook = async (req, res) => {
     try {
         const { id } = req.params;
-        // Потрібно також видалити всі взаємодії з цією книгою, щоб уникнути помилок
         await db.execute('DELETE FROM userbookinteraction WHERE book_id = ?', [id]);
         await db.execute('DELETE FROM book WHERE id = ?', [id]);
         res.json({ message: 'Book deleted successfully' });
@@ -121,7 +112,6 @@ exports.deleteBook = async (req, res) => {
     }
 };
 
-// [USER] Видалити книгу зі свого списку
 exports.deleteUserBookInteraction = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -134,7 +124,6 @@ exports.deleteUserBookInteraction = async (req, res) => {
 };
 
 
-// Додати нову книгу (тільки для адміна)
 exports.addBook = async (req, res) => {
     try {
         const { isbn, title, author_id, description, year, genre_id } = req.body;
@@ -146,7 +135,6 @@ exports.addBook = async (req, res) => {
     }
 };
 
-// Отримати книги конкретного користувача
 exports.getUserBooks = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -183,7 +171,6 @@ exports.getUserBookStatus = async (req, res) => {
     }
 };
 
-// Додати/оновити взаємодію користувача з книгою
 exports.manageUserBook = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -202,7 +189,6 @@ exports.manageUserBook = async (req, res) => {
                 comment = VALUES(comment)
         `;
 
-        // Передаємо в запит оброблені значення
         await db.execute(query, [userId, book_id, status, finalRating, finalComment]);
         res.json({ message: 'Your book list has been updated.' });
     } catch (error) {

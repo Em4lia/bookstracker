@@ -66,7 +66,6 @@ function MyBooksPage() {
                                         </ListGroup.Item>
                                     </ListGroup>
 
-                                    {/* Кнопка "Видалити"*/}
                                     <Button
                                         variant="outline-danger"
                                         onClick={() => handleRemove(book.id)}

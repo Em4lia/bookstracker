@@ -1,9 +1,7 @@
-// src/services/api.js
 import axios from 'axios';
 
-// Створюємо екземпляр axios з базовими налаштуваннями
 const api = axios.create({
-    baseURL: 'http://localhost:5000/api', // Базова URL вашого бекенду
+    baseURL: 'http://localhost:5000/api',
 });
 
 // Перехоплювач запитів (Interceptor)
@@ -18,7 +16,7 @@ api.interceptors.request.use(
         return config;
     },
     (error) => {
-        // Якщо виникає помилка при налаштуванні запиту
+        // Якщо помилка при налаштуванні запиту
         return Promise.reject(error);
     }
 );

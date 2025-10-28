@@ -1,4 +1,3 @@
-// src/pages/LoginPage.jsx
 import React, { useState } from 'react';
 import api from '../services/api';
 
@@ -8,13 +7,13 @@ function LoginPage() {
     const [error, setError] = useState('');
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Запобігаємо перезавантаженню сторінки
-        setError(''); // Скидаємо помилку
+        e.preventDefault();
+        setError('');
 
         try {
             const response = await api.post('/auth/login', { username, password });
-            localStorage.setItem('token', response.data.token); // Зберігаємо токен
-            window.location.href = '/my-books'; // Перенаправляємо на сторінку з книгами
+            localStorage.setItem('token', response.data.token);
+            window.location.href = '/my-books';
         } catch (err) {
             setError('Неправильний логін або пароль.');
             console.error(err);

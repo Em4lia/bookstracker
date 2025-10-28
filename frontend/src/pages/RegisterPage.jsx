@@ -69,19 +69,16 @@ function RegisterPage() {
         >
             <div className="card p-4 shadow" style={{width: '100%', maxWidth: '500px'}}>
                 <h2 className="text-center mb-4">Реєстрація</h2>
-                <form onSubmit={handleSubmit} noValidate> {/* noValidate, щоб вимкнути HTML5 валідацію */}
+                <form onSubmit={handleSubmit} noValidate>
 
-                    {/* 5. Оновлені поля з відображенням помилок */}
                     <div className="mb-3">
                         <label className="form-label">Ім'я:</label>
                         <input
                             type="text"
-                            // Додаємо клас 'is-invalid' від Bootstrap, якщо є помилка
                             className={`form-control ${errors.name ? 'is-invalid' : ''}`}
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                         />
-                        {/* Блок для виведення тексту помилки */}
                         {errors.name && <div className="invalid-feedback">{errors.name}</div>}
                     </div>
                     <div className="mb-3">
@@ -115,7 +112,6 @@ function RegisterPage() {
                         {errors.password && <div className="invalid-feedback">{errors.password}</div>}
                     </div>
 
-                    {/* 6. Нове поле "Підтвердіть пароль" */}
                     <div className="mb-3">
                         <label className="form-label">Підтвердіть пароль:</label>
                         <input
@@ -127,7 +123,6 @@ function RegisterPage() {
                         {errors.passwordConfirm && <div className="invalid-feedback">{errors.passwordConfirm}</div>}
                     </div>
 
-                    {/* Помилки з сервера */}
                     {serverError && <p className="text-danger">{serverError}</p>}
                     {message && <p className="text-success">{message}</p>}
                     <button type="submit" className="btn btn-success w-100">Зареєструватися</button>

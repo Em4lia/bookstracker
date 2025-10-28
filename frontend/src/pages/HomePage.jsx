@@ -1,4 +1,3 @@
-// client/src/pages/HomePage.jsx
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import { Link } from 'react-router-dom';
@@ -9,7 +8,6 @@ function HomePage() {
     const [search, setSearch] = useState('');
     const [sortBy, setSortBy] = useState('id_desc');
 
-    // --- Стан для пагінації ---
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
@@ -22,7 +20,6 @@ function HomePage() {
 
             const response = await api.get(`/books?${params.toString()}`);
 
-            // Отримуємо нові дані з бекенду
             setBooks(response.data.books);
             setTotalPages(response.data.totalPages);
             setCurrentPage(response.data.currentPage);
@@ -32,7 +29,6 @@ function HomePage() {
         }
     };
 
-    // Перезавантажуємо дані при зміні пошуку, сортування або поточної сторінки
     useEffect(() => {
         fetchBooks(currentPage);
     }, [search, sortBy, currentPage]);
@@ -42,7 +38,6 @@ function HomePage() {
         setCurrentPage(pageNumber);
     };
 
-    // Функція для рендерингу елементів пагінації
     const renderPaginationItems = () => {
         let items = [];
         for (let number = 1; number <= totalPages; number++) {
@@ -119,7 +114,6 @@ function HomePage() {
                 )}
             </Row>
 
-            {/* --- Блок пагінації --- */}
             {totalPages > 1 && (
                 <Row>
                     <Col className="d-flex justify-content-center">

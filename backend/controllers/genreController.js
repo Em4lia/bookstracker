@@ -1,4 +1,3 @@
-// controllers/genreController.js
 const db = require('../config/db');
 
 exports.getAllGenres = async (req, res) => {

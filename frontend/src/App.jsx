@@ -1,13 +1,10 @@
-// client/src/App.jsx
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 
-// Імпортуємо нові компоненти
 import Header from './components/Header';
 import Footer from './components/Footer';
 
-// Імпортуємо сторінки
 import HomePage from './pages/HomePage';
 import BookDetailsPage from './pages/BookDetailsPage';
 import LoginPage from './pages/LoginPage';

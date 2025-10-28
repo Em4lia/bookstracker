@@ -1,4 +1,3 @@
-// controllers/authorController.js
 const db = require('../config/db');
 
 exports.getAllAuthors = async (req, res) => {
@@ -20,7 +19,7 @@ exports.updateAuthor = async (req, res) => {
 };
 
 exports.deleteAuthor = async (req, res) => {
-    // УВАГА: В реальному проекті тут має бути перевірка, чи не прив'язаний автор до книг
+    // TODO:  перевірка, чи не прив'язаний автор до книг
     const { id } = req.params;
     await db.execute('DELETE FROM author WHERE id = ?', [id]);
     res.json({ message: 'Author deleted' });
