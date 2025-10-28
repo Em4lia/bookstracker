@@ -174,9 +174,9 @@ exports.getUserBookStatus = async (req, res) => {
         const [rows] = await db.execute(query, [userId, bookId]);
 
         if (rows.length > 0) {
-            res.json(rows[0]); // Повертає об'єкт взаємодії (статус, рейтинг і т.д.)
+            res.json(rows[0]);
         } else {
-            res.json(null); // Повертає null, якщо книга не у списку
+            res.json(null);
         }
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
@@ -187,15 +187,12 @@ exports.getUserBookStatus = async (req, res) => {
 exports.manageUserBook = async (req, res) => {
     try {
         const userId = req.user.id;
-        // Витягуємо дані з тіла запиту
+
         const { book_id, status, rating, comment } = req.body;
 
-        // Встановлюємо null, якщо значення не передано
         const finalRating = rating !== undefined ? rating : null;
         const finalComment = comment !== undefined ? comment : null;
 
-        // Використовуємо INSERT ... ON DUPLICATE KEY UPDATE для зручності
-        // Це додасть новий запис, якщо його немає, або оновить існуючий
         const query = `
             INSERT INTO userbookinteraction (user_id, book_id, status, rating, comment)
             VALUES (?, ?, ?, ?, ?)

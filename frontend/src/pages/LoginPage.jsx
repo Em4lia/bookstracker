@@ -22,30 +22,34 @@ function LoginPage() {
     };
 
     return (
-        <div>
-            <h2>Вхід</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Ім'я користувача:</label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Пароль:</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                <button type="submit">Увійти</button>
-            </form>
+        <div className="container d-flex justify-content-center align-items-center">
+            <div className="card p-4 shadow" style={{width: '100%', maxWidth: '400px'}}>
+                <h2 className="text-center mb-4">Вхід</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="mb-3">
+                        <label className="form-label">Ім'я користувача:</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label">Пароль:</label>
+                        <input
+                            type="password"
+                            className="form-control"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    {error && <p className="text-danger">{error}</p>}
+                    <button type="submit" className="btn btn-primary w-100">Увійти</button>
+                </form>
+            </div>
         </div>
     );
 }
