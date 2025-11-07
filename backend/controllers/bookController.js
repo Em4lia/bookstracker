@@ -14,9 +14,10 @@ exports.getAllBooks = async (req, res) => {
         let whereClauses = [];
 
         if (search) {
-            whereClauses.push(`(b.title LIKE ? OR a.name LIKE ?)`);
-            queryParams.push(`%${search}%`, `%${search}%`);
+            whereClauses.push(`(b.title LIKE ? OR a.name LIKE ? OR b.isbn LIKE ?)`);
+            queryParams.push(`%${search}%`, `%${search}%`, `%${search}%`);
         }
+
         if (genre_id) {
             whereClauses.push(`b.genre_id = ?`);
             queryParams.push(genre_id);
@@ -70,10 +71,14 @@ exports.getBookById = async (req, res) => {
     try {
         const { id } = req.params;
         const query = `
-            SELECT b.id, b.isbn, b.title, b.description, b.year, a.id as author_id, a.name AS author_name, g.id as genre_id, g.name AS genre_name
+            SELECT
+                b.id, b.isbn, b.title, b.description, b.year,
+                a.id as author_id, a.name AS author_name,
+                g.id as genre_id, g.name AS genre_name,
+                (SELECT AVG(rating) FROM userbookinteraction WHERE book_id = b.id) as average_rating
             FROM book b
-            JOIN author a ON b.author_id = a.id
-            JOIN genre g ON b.genre_id = g.id
+                     JOIN author a ON b.author_id = a.id
+                     JOIN genre g ON b.genre_id = g.id
             WHERE b.id = ?
         `;
         const [rows] = await db.execute(query, [id]);
@@ -176,6 +181,18 @@ exports.manageUserBook = async (req, res) => {
         const userId = req.user.id;
 
         const { book_id, status, rating, comment } = req.body;
+
+        const [userRows] = await db.execute('SELECT is_blocked FROM user WHERE id = ?', [userId]);
+
+        if (userRows.length === 0) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        const user = userRows[0];
+
+        if (user.is_blocked) {
+            return res.status(403).json({ message: 'Your account is blocked. You cannot perform this action.' });
+        }
 
         const finalRating = rating !== undefined ? rating : null;
         const finalComment = comment !== undefined ? comment : null;

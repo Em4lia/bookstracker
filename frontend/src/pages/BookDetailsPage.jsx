@@ -121,9 +121,12 @@ function BookDetailsPage() {
             <Row>
                 <Col md={8}>
                     <h2>{book.title}</h2>
-                    <p className="text-muted">Автор: {book.author_name} | Жанр: {book.genre_name} | Рік: {book.year}</p>
+                    <p className="text-muted">Автор: {book.author_name} | Жанр: {book.genre_name} | Рік: {book.year} |
+                        ISBN: {book.isbn}</p>
+                    <strong>Рейтинг</strong> {book.average_rating ? parseFloat(book.average_rating).toFixed(1) + ' ⭐' : 'Немає оцінок'}
+                    <hr/>
                     <p>{book.description}</p>
-                    <hr />
+                    <hr/>
 
                     <h3>Відгуки</h3>
                     {reviews.length > 0 ? (
@@ -137,14 +140,16 @@ function BookDetailsPage() {
                                         </Col>
                                         {admin && (
                                             <Col xs="auto">
-                                                <Button variant="outline-danger" size="sm" onClick={() => handleReviewDelete(review.user_id)}>
+                                                <Button variant="outline-danger" size="sm"
+                                                        onClick={() => handleReviewDelete(review.user_id)}>
                                                     Видалити
                                                 </Button>
                                             </Col>
                                         )}
                                     </Row>
                                     <p className="mb-1 mt-2">{review.comment}</p>
-                                    <small className="text-muted">{new Date(review.created_at).toLocaleDateString()}</small>
+                                    <small
+                                        className="text-muted">{new Date(review.created_at).toLocaleDateString()}</small>
                                 </ListGroup.Item>
                             ))}
                         </ListGroup>

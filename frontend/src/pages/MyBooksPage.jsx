@@ -34,7 +34,9 @@ function MyBooksPage() {
 
     return (
         <>
-            <h2 className="mb-4">Моя бібліотека 📖</h2>
+            <div style={{textAlign: 'center'}}>
+                <h2 className="mb-4">Моя бібліотека 📖</h2>
+            </div>
 
             {books.length === 0 ? (
                 <Alert variant="info">
@@ -62,7 +64,8 @@ function MyBooksPage() {
                                             <strong>Статус:</strong> {statusMap[book.status] || book.status}
                                         </ListGroup.Item>
                                         <ListGroup.Item className="px-0">
-                                            <strong>Відгук:</strong> {book.rating ? `${book.rating}/10 ⭐` : 'Немає оцінки'}
+                                            <strong>Ваш
+                                                відгук:</strong> {book.rating ? `${book.rating}/10 ⭐` : 'Немає оцінки'}
                                         </ListGroup.Item>
                                     </ListGroup>
 

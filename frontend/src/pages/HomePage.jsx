@@ -56,7 +56,9 @@ function HomePage() {
 
     return (
         <>
-            <h2 className="mb-4">Вся бібліотека 📚</h2>
+            <div style={{textAlign: 'center'}}>
+                <h2 className="mb-4" style={{marginLeft: '6%'}}>Вся бібліотека 📚</h2>
+            </div>
 
             <Row className="mb-4 p-3 bg-light rounded border">
                 <Col md={8}>
@@ -93,7 +95,8 @@ function HomePage() {
                                     <Card.Text>
                                         <strong>Жанр:</strong> {book.genre_name}<br/>
                                         <strong>Рейтинг:</strong> {book.average_rating ?
-                                        parseFloat(book.average_rating).toFixed(1) + ' ⭐' : 'Немає оцінок'}
+                                        parseFloat(book.average_rating).toFixed(1) + ' ⭐' : 'Немає оцінок'}<br/>
+                                        <p style={{color: '#ccc'}}> ISBN: {book.isbn} </p>
                                     </Card.Text>
                                     <Button
                                         as={Link}

@@ -16,7 +16,7 @@ function Header() {
 
     return (
         <Navbar bg="dark" variant="dark" expand="lg" className="shadow-sm">
-            <Container fluid>
+            <Container fluid style={{ marginRight: '6%', marginLeft: '6%' }}>
                 <Navbar.Brand as={Link} to="/">📚 Book Tracker</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
